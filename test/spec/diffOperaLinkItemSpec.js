@@ -77,4 +77,32 @@ describe("diffOperaLinkItem", function() {
             'removed': {}
         });
     });
+
+    it("should correctly diff objects with several different properties", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Title 1',
+                        'uri':   'http://example.com',
+                    }};
+        var obj2 = {'id': '123',
+                    'properties': {
+                        'title': 'Title 2',
+                        'uri':   'http://example.com/',
+                    }};
+
+        expect(diffOperaLinkItem(obj1, obj2)).toEqual({
+            'added': {},
+            'modified': {
+                'title': {
+                    'oldValue': 'Title 1',
+                    'newValue': 'Title 2'
+                },
+                'uri': {
+                    'oldValue': 'http://example.com',
+                    'newValue': 'http://example.com/'
+                }
+            },
+            'removed': {}
+        });
+    });
 });
