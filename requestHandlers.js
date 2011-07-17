@@ -2,7 +2,8 @@ var querystring = require("querystring"),
     sys = require("sys"),
     fs = require("fs"),
     v = require("valentine"),
-    operalinkclient = require("./lib/operalinkclient");
+    operalinkclient = require("./lib/operalinkclient"),
+    operalinkdiff = require("./lib/operalink-diff");
 
 function start(response, postData) {
     console.log("Checking for an access token");
@@ -93,6 +94,46 @@ function authorise(response, postData) {
     });
 }
 
+function backupList(response, postData) {
+    var datatype = "bookmark";
+    fs.readdir("./repo/" + datatype, function(error, files) {
+        if (error) {
+            response.writeHead(404, {"Content-Type": "text/plain"});
+            response.write("404 No backups found");
+            response.end();
+        } else {
+            var responseObject = [];
+            fs.readFile("./repo/" + datatype + "-latest.json", "utf-8", function(err, latestBackupJson) {
+                if (err) {
+                    response.writeHead(500);
+                    response.write("Couldn't find the latest snapshot for " +
+                                   datatype);
+                    response.end();
+                }
+                var latestObject = JSON.parse(latestBackupJson);
+                v.each(files, function(f) {
+                    var backupJson = fs.readFileSync("./repo/" + datatype +
+                                                                 "/" + f,
+                                                     "binary");
+                    var backupObject = JSON.parse(backupJson);
+                    var diff = operalinkdiff.diffOperaLinkItems(latestObject,
+                                                                backupObject);
+                    responseObject.push({name: f,
+                                         numberItems:
+                                             {total: backupObject.length},
+                                         diff: {added: diff.added.length,
+                                                modified: diff.modified.length,
+                                                removed: diff.removed.length}});
+                });
+                response.writeHead(200);
+                response.write(JSON.stringify(responseObject));
+                response.end();
+            });
+        }
+    });
+}
+
 exports.start = start;
 exports.getRequestToken = getRequestToken;
 exports.authorise = authorise;
+exports.backupList = backupList;

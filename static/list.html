@@ -9,7 +9,7 @@
     OperaLinkTimeMachineController.$inject = ['$resource'];
     function OperaLinkTimeMachineController($resource) {
       this.DiffList = $resource(
-        '/static/random-diff-list.json',
+        '/backup/list',
         {},
         { get:     {method: 'GET', isArray: true}}
       );
