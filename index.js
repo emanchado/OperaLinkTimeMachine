@@ -3,9 +3,10 @@ var router = require("./router");
 var requestHandlers = require("./requestHandlers");
 
 var handle = {}
-handle["/"] = requestHandlers.start;
-handle["/start"] = requestHandlers.start;
-handle["/get_request_token"] = requestHandlers.getRequestToken;
-handle["/authorise"] = requestHandlers.authorise;
+handle["^/$"] = requestHandlers.start;
+handle["^/start"] = requestHandlers.start;
+handle["^/get_request_token"] = requestHandlers.getRequestToken;
+handle["^/authorise"] = requestHandlers.authorise;
+handle["^/static/.+"] = "*static*";
 
 server.start(router.route, handle);
