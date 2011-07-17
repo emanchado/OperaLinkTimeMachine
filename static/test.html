@@ -1,0 +1,57 @@
+<!doctype html>
+<html xmlns:ng="http://angularjs.org">
+ <script src="http://localhost:8888/static/angular-0.9.17.min.js" ng:autobind></script>
+ <script src="http://localhost:8888/static/valentine.min.js" ng:autobind></script>
+ <body>
+  <script>
+    OperaLinkDiffController.$inject = ['$resource'];
+    function OperaLinkDiffController($resource) {
+      this.Diff = $resource(
+        '/static/random-diff.json',
+        {},
+        { get:     {method: 'GET'}}
+      );
+    }
+    OperaLinkDiffController.prototype = {
+      fetch: function() {
+        this.diff = this.Diff.get();
+      },
+    };
+  </script>
+  <div ng:controller="OperaLinkDiffController" ng:init="fetch()">
+    <div class="diff-item" ng:if="diff.modified.$size()">
+      Modified items ({{diff.modified.$size()}}). <input type="button" ng:click="showModified = ! showModified" value="Show/hide all" />
+    </div>
+    <div class="diff-item" ng:show="showModified" ng:repeat="item in diff.modified">
+      {{item.id | html}}
+      <div class="diff-item" ng:show="item.added.$size()">
+        Added properties:
+        <div class="diff-modified-prop" ng:repeat="(addedProp,value) in item.added">
+          {{addedProp | html}} added (value "{{value}}")
+        </div>
+      </div>
+      <div class="diff-item" ng:hide="item.added.$size()">
+        There are NOT any added properties
+      </div>
+      <div class="diff-item" ng:show="item.modified.$size()">
+        Modified properties:
+        <div class="diff-modified-prop" ng:repeat="(modifiedProp,value) in item.modified">
+          {{modifiedProp | html}} changed, "{{value.oldValue}}" -&gt; "{{value.newValue}}"
+        </div>
+      </div>
+      <div class="diff-item" ng:hide="item.modified.$size()">
+        There are NOT any added properties
+      </div>
+      <div class="diff-item" ng:show="item.removed.$size()">
+        Removed properties:
+        <div class="diff-modified-prop" ng:repeat="(removedProp,value) in item.removed">
+          {{removedProp | html}} removed (had value "{{value}}")
+        </div>
+      </div>
+      <div class="diff-item" ng:hide="item.removed.$size()">
+        There are NOT any removed properties
+      </div>
+    </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,7 @@
+{"added":    [],
+ "modified": [{"id": "123",
+               "added": {"nickname": "t"},
+               "modified": {"title": {"oldValue": "Title 1",
+                                      "newValue": "Title 2"}},
+               "removed": {"description": "Boring description"}}],
+ "removed":  []}
