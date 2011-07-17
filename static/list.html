@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org">
+  <head>
+    <title>Opera Link time machine</title>
+    <link rel="stylesheet" href="/static/css/main.css"></script>
+    <script src="/static/valentine.min.js"></script>
+    <script src="/static/angular-0.9.17.min.js" ng:autobind></script>
+    <script>
+    OperaLinkTimeMachineController.$inject = ['$resource'];
+    function OperaLinkTimeMachineController($resource) {
+      this.DiffList = $resource(
+        '/static/random-diff-list.json',
+        {},
+        { get:     {method: 'GET', isArray: true}}
+      );
+    }
+    OperaLinkTimeMachineController.prototype = {
+      fetchBackupList: function() {
+        this.diffList = this.DiffList.get({dataType: datatype.value});
+      }
+    };
+    </script>
+  </head>
+  <body ng:controller="OperaLinkTimeMachineController" ng:init="fetchBackupList()">
+    <h1>Backups ({{datatype}})</h1>
+    <input type="hidden" name="datatype" value="bookmark" />
+
+    <div id="options-panel">
+      <div class="option">Make backup now</div>
+      <div class="option">Remove all backups</div>
+    </div>
+
+    <div class="backup-item" ng:repeat="backup in diffList">
+      <h2>{{backup.name}} ({{backup.numberItems.total}} items)</h2>
+      <ul class="backup-property">
+        <li ng:show="backup.diff.added">{{backup.diff.added}} new items compared to now</li>
+        <li ng:show="backup.diff.modified">{{backup.diff.modified}} modified items compared to now</li>
+        <li ng:show="backup.diff.removed">{{backup.diff.removed}} removed items compared to now</li>
+        <li ng:show="! backup.diff.added && ! backup.diff.modified && ! backup.diff.removed">Identical to now</li>
+      </ul>
+      <input type="button" value="Details" />
+      <input type="button" value="Switch to this" />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+body {
+    font-family: "Georgia", serif;
+    margin: 0 2em;
+}
+
+#options-panel {
+    float: right;
+    margin-right: 2em;
+}
+
+.backup-info-summary {
+    font-size: 24px;
+}
+
+.item-list {
+    margin-bottom: 2ex;
+}
+
+h2 {
+    font-size: 16px;
+    display: inline;
+}
+
+.added-items h2 { color: #0a0; }
+.modified-items h2 { color: #aa0; }
+.removed-items h2 { color: #a00; }
+
+.diff-item {
+    margin-left: 3em;
+    margin-bottom: 1.5ex;
+    font-size: 12px;
+}
+
+.property-name {
+    font-weight: bold;
+}
