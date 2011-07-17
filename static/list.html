@@ -38,8 +38,10 @@
         <li ng:show="backup.diff.removed">{{backup.diff.removed}} removed items compared to now</li>
         <li ng:show="! backup.diff.added && ! backup.diff.modified && ! backup.diff.removed">Identical to now</li>
       </ul>
-      <input type="button" value="Details" />
-      <input type="button" value="Switch to this" />
+      <div class="backup-options">
+        <input type="button" value="Details" />
+        <input type="button" value="Switch to this" ng:hide="! backup.diff.added && ! backup.diff.modified && ! backup.diff.removed" />
+      </div>
     </div>
   </body>
 </html>

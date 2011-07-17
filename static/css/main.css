@@ -34,3 +34,8 @@ h2 {
 .property-name {
     font-weight: bold;
 }
+
+.backup-options {
+    margin-left: 1em;
+    margin-bottom: 3ex;
+}
