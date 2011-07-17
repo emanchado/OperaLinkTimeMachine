@@ -1,8 +1,6 @@
 describe("diffOperaLinkItem", function() {
     it("should correctly diff empty objects", function() {
-        expect(diffOperaLinkItem({}, {})).toEqual({'added':    [],
-                                                   'modified': [],
-                                                   'removed':  []});
+        expect(diffOperaLinkItem({}, {})).toEqual({});
     });
 
     it("should correctly diff equal objects", function() {
@@ -11,9 +9,7 @@ describe("diffOperaLinkItem", function() {
                         'title': 'Title 1',
                         'uri':   'http://example.com',
                     }};
-        expect(diffOperaLinkItem(obj1, obj1)).toEqual({'added':    [],
-                                                       'modified': [],
-                                                       'removed':  []});
+        expect(diffOperaLinkItem(obj1, obj1)).toEqual({});
     });
 
     it("should correctly diff objects with an extra property", function() {
@@ -29,10 +25,9 @@ describe("diffOperaLinkItem", function() {
                         'nickname': 't',
                     }};
 
-        expect(diffOperaLinkItem(obj1, obj2)).toEqual({
-            'added':    {'nickname': 't'},
-            'modified': {},
-            'removed':  {}});
+        expect(diffOperaLinkItem(obj1, obj2)).toEqual({'nickname':
+                                                       {'oldValue': undefined,
+                                                        'newValue': 't'}});
     });
 
     it("should correctly diff objects with a missing property", function() {
@@ -49,9 +44,7 @@ describe("diffOperaLinkItem", function() {
                     }};
 
         expect(diffOperaLinkItem(obj1, obj2)).toEqual({
-            'added':    {},
-            'modified': {},
-            'removed':  {'nickname': 't'}});
+            'nickname': {'oldValue': 't', 'newValue': undefined}});
     });
 
     it("should correctly diff objects with a different property", function() {
@@ -67,15 +60,10 @@ describe("diffOperaLinkItem", function() {
                     }};
 
         expect(diffOperaLinkItem(obj1, obj2)).toEqual({
-            'added': {},
-            'modified': {
-                'title': {
-                    'oldValue': 'Title 1',
-                    'newValue': 'Title 2'
-                }
-            },
-            'removed': {}
-        });
+            'title': {
+                'oldValue': 'Title 1',
+                'newValue': 'Title 2'
+            }});
     });
 
     it("should correctly diff objects with several different properties", function() {
@@ -91,18 +79,13 @@ describe("diffOperaLinkItem", function() {
                     }};
 
         expect(diffOperaLinkItem(obj1, obj2)).toEqual({
-            'added': {},
-            'modified': {
-                'title': {
-                    'oldValue': 'Title 1',
-                    'newValue': 'Title 2'
-                },
-                'uri': {
-                    'oldValue': 'http://example.com',
-                    'newValue': 'http://example.com/'
-                }
+            'title': {
+                'oldValue': 'Title 1',
+                'newValue': 'Title 2'
             },
-            'removed': {}
-        });
+            'uri': {
+                'oldValue': 'http://example.com',
+                'newValue': 'http://example.com/'
+            }});
     });
 });

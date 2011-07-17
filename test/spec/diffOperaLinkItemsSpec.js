@@ -68,10 +68,8 @@ describe("diffOperaLinkItems", function() {
                         'uri':   'http://example.com',
                     }};
         var diff = {'id': '123',
-                    'added': {},
-                    'modified': {'title': {'oldValue': 'Title 1',
-                                           'newValue': 'Title 2'}},
-                    'removed': {}};
+                    'title': {'oldValue': 'Title 1',
+                              'newValue': 'Title 2'}};
         expect(diffOperaLinkItems([obj1], [obj2])).toEqual({'added':    [],
                                                             'modified': [diff],
                                                             'removed':  []});
@@ -96,10 +94,8 @@ describe("diffOperaLinkItems", function() {
         var list1 = [obj1, obj3];
         var list2 = [obj3, obj2];
         var diff = {'id': '123',
-                    'added': {},
-                    'modified': {'title': {'oldValue': 'Title 1',
-                                           'newValue': 'Title 2'}},
-                    'removed': {}};
+                    'title': {'oldValue': 'Title 1',
+                              'newValue': 'Title 2'}};
         expect(diffOperaLinkItems(list1, list2)).toEqual({'added':    [],
                                                           'modified': [diff],
                                                           'removed':  []});
