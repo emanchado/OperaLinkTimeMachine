@@ -1,7 +1,6 @@
 var fs = require("fs");
 
 function route(handle, pathname, response, postData) {
-    console.log("About to route a request for " + pathname);
     var found = 0;
     for (var i in handle) {
         if (! pathname.match(i))
@@ -13,7 +12,6 @@ function route(handle, pathname, response, postData) {
         } else if (handle[i] === '*static*') {
             found = 1;
             var path = pathname.replace(/\.\./g, '');
-            console.log("Static file request handler found for " + path);
             fs.readFile("." + path, "binary", function(error, file) {
                 if (error) {
                     response.writeHead(404, {"Content-Type": "text/plain"});
