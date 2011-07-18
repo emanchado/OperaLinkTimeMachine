@@ -1,11 +1,11 @@
 describe("diffOperaLinkItems", function() {
-    it("should diff empty object lists", function() {
+    it("should diff empty item lists", function() {
         expect(diffOperaLinkItems([], [])).toEqual({'added':    [],
                                                     'modified': [],
                                                     'removed':  []});
     });
 
-    it("should diff equal object lists", function() {
+    it("should diff equal item lists", function() {
         var obj = {'id': '123',
                    'properties': {
                        'title': 'Title 1',
@@ -16,7 +16,7 @@ describe("diffOperaLinkItems", function() {
                                                           'removed':  []});
     });
 
-    it("should diff equivalent (different order) object lists", function() {
+    it("should diff equivalent (different order) item lists", function() {
         var obj = {'id': '123',
                    'properties': {
                        'title': 'Title 1',
@@ -34,7 +34,7 @@ describe("diffOperaLinkItems", function() {
                                                           'removed':  []});
     });
 
-    it("should diff an extra object", function() {
+    it("should diff an extra item", function() {
         var obj = {'id': '123',
                    'properties': {
                        'title': 'Title 1',
@@ -45,7 +45,7 @@ describe("diffOperaLinkItems", function() {
                                                        'removed':  []});
     });
 
-    it("should diff a missing object", function() {
+    it("should diff a missing item", function() {
         var obj = {'id': '123',
                    'properties': {
                        'title': 'Title 1',
@@ -56,7 +56,7 @@ describe("diffOperaLinkItems", function() {
                                                        'removed':  [obj]});
     });
 
-    it("should diff a modified object", function() {
+    it("should diff a modified item", function() {
         var obj1 = {'id': '123',
                     'properties': {
                         'title': 'Title 1',
@@ -75,7 +75,7 @@ describe("diffOperaLinkItems", function() {
                                                             'removed':  []});
     });
 
-    it("should diff a modified object in different order", function() {
+    it("should diff a modified item in different order", function() {
         var obj1 = {'id': '123',
                     'properties': {
                         'title': 'Title 1',
