@@ -1,6 +1,15 @@
-var fs = require("fs");
+var fs  = require("fs"),
+    url = require("url");
 
-function route(handle, pathname, response, postData) {
+function route(handle, request, response, postData) {
+    var parsedUrl = url.parse(request.url);
+    var pathname = parsedUrl.pathname;
+    if (parsedUrl.query) {
+        console.log("Request for " + pathname + "?" + parsedUrl.query);
+    } else {
+        console.log("Request for " + pathname);
+    }
+
     var found = 0;
     for (var i in handle) {
         if (! pathname.match(i))
@@ -8,7 +17,7 @@ function route(handle, pathname, response, postData) {
 
         if (typeof handle[i] === 'function') {
             found = 1;
-            handle[i](response, postData);
+            handle[i](request, response, postData);
         } else if (handle[i] === '*static*') {
             found = 1;
             var path = pathname.replace(/\.\./g, '');

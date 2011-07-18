@@ -5,7 +5,7 @@ var querystring = require("querystring"),
     operalinkclient = require("./lib/operalinkclient"),
     operalinkutils = require("./lib/operalink-utils");
 
-function start(response, postData) {
+function start(request, response, postData) {
     console.log("Checking for an access token");
 
     fs.readFile("config.json", "ascii", function(error, file) {
@@ -40,7 +40,7 @@ function start(response, postData) {
     });
 }
 
-function getRequestToken(response, postData) {
+function getRequestToken(request, response, postData) {
     console.log("Request handler 'getRequestToken' was called.");
 
     operalinkclient.oauthClient.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
@@ -71,7 +71,7 @@ function getRequestToken(response, postData) {
     });
 }
 
-function authorise(response, postData) {
+function authorise(request, response, postData) {
     params = querystring.parse(postData)
     operalinkclient.oauthClient.getOAuthAccessToken(params.request_token, params.request_token_secret, params.verifier, function(error2, oauth_token, oauth_token_secret, results2) {
         if (error2) {
@@ -94,7 +94,7 @@ function authorise(response, postData) {
     });
 }
 
-function backupList(response, postData) {
+function backupList(request, response, postData) {
     var datatype = "bookmark";
     fs.readdir("./repo/" + datatype, function(error, files) {
         if (error) {
