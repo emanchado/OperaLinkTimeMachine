@@ -3,7 +3,7 @@ var querystring = require("querystring"),
     fs = require("fs"),
     v = require("valentine"),
     operalinkclient = require("./lib/operalinkclient"),
-    operalinkdiff = require("./lib/operalink-diff");
+    operalinkutils = require("./lib/operalink-utils");
 
 function start(response, postData) {
     console.log("Checking for an access token");
@@ -116,7 +116,7 @@ function backupList(response, postData) {
                                                                  "/" + f,
                                                      "binary");
                     var backupObject = JSON.parse(backupJson);
-                    var diff = operalinkdiff.diffOperaLinkItems(latestObject,
+                    var diff = operalinkutils.diffOperaLinkItems(latestObject,
                                                                 backupObject);
                     responseObject.push({name: f,
                                          numberItems:
