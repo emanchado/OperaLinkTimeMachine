@@ -100,4 +100,58 @@ describe("diffOperaLinkItems", function() {
                                                           'modified': [diff],
                                                           'removed':  []});
     });
+
+    it("should diff two equivalent lists with different folders", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Bookmark',
+                        'uri':   'http://example.com',
+                    }};
+        var folder1 = {'id': '456',
+                       'properties': {
+                           'title': 'Folder',
+                       },
+                       'children': []};
+        var folder2 = {'id': '456',
+                       'properties': {
+                           'title': 'Folder',
+                       },
+                       'children': [obj1]};
+        var list1 = [obj1, folder1];
+        var list2 = [folder2];
+        expect(diffOperaLinkItems(list1, list2)).toEqual({'added':    [],
+                                                          'modified': [],
+                                                          'removed':  []});
+    });
+
+    it("should diff modified items in different folders", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Bookmark',
+                        'uri':   'http://example.com',
+                    }};
+        var folder1 = {'id': '456',
+                       'properties': {
+                           'title': 'Folder',
+                       },
+                       'children': []};
+        var obj2 = {'id': '123',
+                    'properties': {
+                        'title': 'Bookmark',
+                        'uri':   'http://example.com/index.asp',
+                    }};
+        var folder2 = {'id': '456',
+                       'properties': {
+                           'title': 'Folder',
+                       },
+                       'children': [obj2]};
+        var list1 = [obj1, folder1];
+        var list2 = [folder2];
+        var diff = {'id': '123',
+                    'uri': {'oldValue': 'http://example.com',
+                            'newValue': 'http://example.com/index.asp'}};
+        expect(diffOperaLinkItems(list1, list2)).toEqual({'added':    [],
+                                                          'modified': [diff],
+                                                          'removed':  []});
+    });
 });
