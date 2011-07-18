@@ -88,4 +88,48 @@ describe("diffOperaLinkItem", function() {
                 'newValue': 'http://example.com/'
             }});
     });
+
+    it("should honour the property filter", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Title 1',
+                        'uri':   'http://example.com',
+                    }};
+        var obj2 = {'id': '123',
+                    'properties': {
+                        'title': 'Title 2',
+                        'uri':   'http://example.com/',
+                    }};
+
+        expect(diffOperaLinkItem(obj1, obj2,
+                                 {onlyProperties: ['title']})).toEqual({
+            'title': {
+                'oldValue': 'Title 1',
+                'newValue': 'Title 2'
+            }});
+    });
+
+    it("should honour a non-trivial property filter", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Title 1',
+                        'uri':   'http://example.com',
+                    }};
+        var obj2 = {'id': '123',
+                    'properties': {
+                        'title': 'Title 2',
+                        'uri':   'http://example.com/',
+                    }};
+
+        expect(diffOperaLinkItem(obj1, obj2,
+                                 {onlyProperties: ['title', 'uri']})).toEqual({
+            'title': {
+                'oldValue': 'Title 1',
+                'newValue': 'Title 2'
+            },
+            'uri': {
+                'oldValue': 'http://example.com',
+                'newValue': 'http://example.com/'
+            }});
+    });
 });
