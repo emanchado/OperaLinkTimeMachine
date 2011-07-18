@@ -118,9 +118,10 @@ function backupList(request, response, postData) {
                     var backupObject = JSON.parse(backupJson);
                     var diff = operalinkutils.diffOperaLinkItems(latestObject,
                                                                 backupObject);
+                    var numberItems =
+                        operalinkutils.countOperaLinkItems(backupObject);
                     responseObject.push({name: f,
-                                         numberItems:
-                                             {total: backupObject.length},
+                                         numberItems: {total: numberItems},
                                          diff: {added: diff.added.length,
                                                 modified: diff.modified.length,
                                                 removed: diff.removed.length}});
