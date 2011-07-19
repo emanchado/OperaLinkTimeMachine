@@ -160,4 +160,24 @@ describe("diffOperaLinkItem", function() {
                                          'newValue': 'Title 2'
                                      }});
     });
+
+    it("should always keep 'keep' properties", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Title 1',
+                        'uri':   'http://example.com/index.html'
+                    }};
+        var obj2 = {'id': '123',
+                    'properties': {
+                        'title': 'Title 1',
+                        'uri':   'http://example.com/'
+                    }};
+
+        expect(diffOperaLinkItem(obj1, obj2,
+                                 {onlyProperties: ['title', 'uri'],
+                                  keepProperties: ['title']})).
+            toEqual({'title': 'Title 1',
+                     'uri': {'oldValue': 'http://example.com/index.html',
+                             'newValue': 'http://example.com/'}});
+    });
 });
