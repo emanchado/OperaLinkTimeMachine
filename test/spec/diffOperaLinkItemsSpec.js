@@ -40,7 +40,10 @@ describe("diffOperaLinkItems", function() {
                        'title': 'Title 1',
                        'uri':   'http://example.com',
                    }};
-        expect(diffOperaLinkItems([], [obj])).toEqual({'added':    [obj],
+        var addedObj = {'id':    '123',
+                        'title': 'Title 1',
+                        'uri':   'http://example.com'};
+        expect(diffOperaLinkItems([], [obj])).toEqual({'added':    [addedObj],
                                                        'modified': [],
                                                        'removed':  []});
     });
@@ -51,9 +54,12 @@ describe("diffOperaLinkItems", function() {
                        'title': 'Title 1',
                        'uri':   'http://example.com',
                    }};
+        var remObj = {'id':    '123',
+                      'title': 'Title 1',
+                      'uri':   'http://example.com'};
         expect(diffOperaLinkItems([obj], [])).toEqual({'added':    [],
                                                        'modified': [],
-                                                       'removed':  [obj]});
+                                                       'removed':  [remObj]});
     });
 
     it("should diff a modified item", function() {
@@ -183,5 +189,36 @@ describe("diffOperaLinkItems", function() {
                                       'added':    [],
                                       'modified': [],
                                       'removed':  []});
+    });
+
+    it("should ignores filtered-out properties in added/removed items", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Bookmark',
+                        'uri':   'http://example.com',
+                    }};
+        var folder1 = {'id': '456',
+                       'properties': {
+                           'title': 'Folder',
+                       },
+                       'children': []};
+        var obj2 = {'id': '789',
+                    'properties': {
+                        'title': 'Bookmark 2',
+                        'uri':   'http://example.com:8888/index.js',
+                    }};
+        var list1 = [obj1, folder1];
+        var list2 = [obj1, folder1, obj2];
+        var flatObj = {'id': '789', 'title': 'Bookmark 2'};
+        expect(diffOperaLinkItems(list1, list2,
+                                  {onlyProperties: ["title"]})).toEqual({
+                                      'added':    [flatObj],
+                                      'modified': [],
+                                      'removed':  []});
+        expect(diffOperaLinkItems(list2, list1,
+                                  {onlyProperties: ["title"]})).toEqual({
+                                      'added':    [],
+                                      'modified': [],
+                                      'removed':  [flatObj]});
     });
 });
