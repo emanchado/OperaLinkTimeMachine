@@ -9,16 +9,8 @@
     <script>
     OperaLinkDiffController.$inject = ['$resource'];
     function OperaLinkDiffController($resource) {
-      this.DiffItems = $resource(
-        '/backup/diff',
-        {},
-        { get:     {method: 'GET'}}
-      );
-      this.DiffInfo = $resource(
-        '/static/random-diff-info.json',
-        {},
-        { get:     {method: 'GET'}}
-      );
+      this.DiffItems = $resource('/backup/diff', {}, { get: {method: 'GET'}});
+      this.DiffInfo  = $resource('/backup/info', {}, { get: {method: 'GET'}});
     }
     OperaLinkDiffController.prototype = {
       init: function() {

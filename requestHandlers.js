@@ -181,8 +181,49 @@ function backupDiff(request, response, postData) {
     });
 }
 
+function backupDiffInfo(request, response, postData) {
+    var datatype = "bookmark";
+    var getParams = querystring.parse(url.parse(request.url).query);
+    var backupId = getParams.backupId;
+
+    if (typeof(backupId) === "undefined" || backupId === "") {
+        response.writeHead(400);
+        response.write("{}");
+        response.end();
+        return;
+    }
+
+    fs.readFile("./repo/" + datatype + "/" + backupId + ".json", "utf-8", function(err, backupJson) {
+        if (err) {
+            response.writeHead(500);
+            response.write("Couldn't find backupId " + backupId);
+            response.end();
+        }
+        sys.puts("Reading backup " + backupId);
+        var backupObject = JSON.parse(backupJson);
+        var infoObject = {"backupDate":  backupId, "numberItems": {}};
+        infoObject.numberItems.total =
+            operalinkutils.countOperaLinkItems(backupObject);
+        infoObject.numberItems.bookmarks =
+            operalinkutils.countOperaLinkItems(backupObject,
+                                               "bookmark");
+        infoObject.numberItems.folders =
+            operalinkutils.countOperaLinkItems(backupObject,
+                                               "bookmark_folder");
+        infoObject.numberItems.separators =
+            operalinkutils.countOperaLinkItems(backupObject,
+                                               "bookmark_separator");
+
+        response.writeHead(200);
+        sys.puts(JSON.stringify(infoObject));
+        response.write(JSON.stringify(infoObject));
+        response.end();
+    });
+}
+
 exports.start = start;
 exports.getRequestToken = getRequestToken;
 exports.authorise = authorise;
 exports.backupList = backupList;
 exports.backupDiff = backupDiff;
+exports.backupDiffInfo = backupDiffInfo;
