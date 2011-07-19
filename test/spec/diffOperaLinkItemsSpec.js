@@ -221,4 +221,47 @@ describe("diffOperaLinkItems", function() {
                                       'modified': [],
                                       'removed':  [flatObj]});
     });
+
+    it("should keep 'keep' properties in modified items", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Bookmark',
+                        'uri':   'http://example.com',
+                    }};
+        var obj2 = {'id': '123',
+                    'properties': {
+                        'title': 'Bookmark',
+                        'uri':   'http://example.com:8888/index.js',
+                    }};
+        var list1 = [obj1];
+        var list2 = [obj1, obj2];
+        var diffObj = {'id': '123',
+                       'title': 'Bookmark',
+                       'uri':   {'oldValue': 'http://example.com',
+                                 'newValue': 'http://example.com:8888/index.js'}};
+        expect(diffOperaLinkItems([obj1], [obj1, obj2],
+                                  {keepProperties: ["title"]})).toEqual({
+                                      'added':    [],
+                                      'modified': [diffObj],
+                                      'removed':  []});
+    });
+
+    it("should not consider idential items with 'keep' properties different", function() {
+        var obj1 = {'id': '123',
+                    'properties': {
+                        'title': 'Bookmark',
+                        'uri':   'http://example.com',
+                    }};
+        var obj2 = {'id': '123',
+                    'properties': {
+                        'title': 'Bookmark',
+                        'uri':   'http://example.com',
+                    }};
+        var list = [obj1, obj2];
+        expect(diffOperaLinkItems([obj1], [obj2],
+                                  {keepProperties: ["title"]})).toEqual({
+                                      'added':    [],
+                                      'modified': [],
+                                      'removed':  []});
+    });
 });
