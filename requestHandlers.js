@@ -22,6 +22,7 @@ function start(request, response, postData) {
                         response.writeHead(500, {"Content-Type": "text/plain"});
                         response.write("Couldn't read directory 'repo'");
                         response.end();
+                        return;
                     }
                     response.writeHead(200, {"Content-Type": "text/plain"});
                     response.write("Configuration file loaded!\n");
@@ -88,6 +89,7 @@ function authorise(request, response, postData) {
                 response.writeHead(500, {"Content-Type": "text/plain"});
                 response.write("Couldn't write configuration file");
                 response.end();
+                return;
             }
             response.writeHead(302, {"Location": "/"});
             response.end();
@@ -110,6 +112,7 @@ function backupList(request, response, postData) {
                     response.write("Couldn't find the latest snapshot for " +
                                    datatype);
                     response.end();
+                    return;
                 }
                 var latestObject = JSON.parse(latestBackupJson);
                 v.each(files, function(f) {
@@ -158,6 +161,7 @@ function backupDiff(request, response, postData) {
             response.write("Couldn't find the latest snapshot for " +
                            datatype);
             response.end();
+            return;
         }
         var latestObject = JSON.parse(latestBackupJson);
         fs.readFile("./repo/" + datatype + "/" + backupId + ".json", "utf-8", function(err, backupJson) {
@@ -165,6 +169,7 @@ function backupDiff(request, response, postData) {
                 response.writeHead(500);
                 response.write("Couldn't find backupId " + backupId);
                 response.end();
+                return;
             }
             sys.puts("Reading backup " + backupId);
             var backupObject = JSON.parse(backupJson);
@@ -198,6 +203,7 @@ function backupDiffInfo(request, response, postData) {
             response.writeHead(500);
             response.write("Couldn't find backupId " + backupId);
             response.end();
+            return;
         }
         sys.puts("Reading backup " + backupId);
         var backupObject = JSON.parse(backupJson);
