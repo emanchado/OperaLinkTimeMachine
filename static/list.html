@@ -39,7 +39,7 @@
         <li ng:show="! backup.diff.added && ! backup.diff.modified && ! backup.diff.removed">Identical to now</li>
       </ul>
       <div class="backup-options">
-        <input type="button" value="Details" />
+        <input type="button" value="Details" onclick="location.href = 'details.html?backupId=' + '{{backup.name}}'.replace('.json', '');" />
         <input type="button" value="Switch to this" ng:hide="! backup.diff.added && ! backup.diff.modified && ! backup.diff.removed" />
       </div>
     </div>
