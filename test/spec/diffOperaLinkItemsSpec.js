@@ -197,18 +197,13 @@ describe("diffOperaLinkItems", function() {
                         'title': 'Bookmark',
                         'uri':   'http://example.com',
                     }};
-        var folder1 = {'id': '456',
-                       'properties': {
-                           'title': 'Folder',
-                       },
-                       'children': []};
         var obj2 = {'id': '789',
                     'properties': {
                         'title': 'Bookmark 2',
                         'uri':   'http://example.com:8888/index.js',
                     }};
-        var list1 = [obj1, folder1];
-        var list2 = [obj1, folder1, obj2];
+        var list1 = [obj1];
+        var list2 = [obj1, obj2];
         var flatObj = {'id': '789', 'title': 'Bookmark 2'};
         expect(diffOperaLinkItems(list1, list2,
                                   {onlyProperties: ["title"]})).toEqual({
