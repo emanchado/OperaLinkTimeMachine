@@ -1,4 +1,5 @@
 var querystring = require("querystring"),
+    url = require("url"),
     sys = require("sys"),
     fs = require("fs"),
     v = require("valentine"),
@@ -114,10 +115,15 @@ function backupList(request, response, postData) {
                 v.each(files, function(f) {
                     var backupJson = fs.readFileSync("./repo/" + datatype +
                                                                  "/" + f,
-                                                     "binary");
+                                                     "utf-8");
                     var backupObject = JSON.parse(backupJson);
-                    var diff = operalinkutils.diffOperaLinkItems(latestObject,
-                                                                backupObject);
+                    var diff = operalinkutils.diffOperaLinkItems(
+                        latestObject,
+                        backupObject,
+                        {onlyProperties: ['title', 'uri', 'nickname',
+                                          'description'],
+                         keepProperties: ['title']}
+                    );
                     var numberItems =
                         operalinkutils.countOperaLinkItems(backupObject);
                     responseObject.push({name: f,
@@ -134,7 +140,49 @@ function backupList(request, response, postData) {
     });
 }
 
+function backupDiff(request, response, postData) {
+    var datatype = "bookmark";
+    var getParams = querystring.parse(url.parse(request.url).query);
+    var backupId = getParams.backupId;
+
+    if (typeof(backupId) === "undefined" || backupId === "") {
+        response.writeHead(400);
+        response.write("{}");
+        response.end();
+        return;
+    }
+
+    fs.readFile("./repo/" + datatype + "-latest.json", "utf-8", function(err, latestBackupJson) {
+        if (err) {
+            response.writeHead(500);
+            response.write("Couldn't find the latest snapshot for " +
+                           datatype);
+            response.end();
+        }
+        var latestObject = JSON.parse(latestBackupJson);
+        fs.readFile("./repo/" + datatype + "/" + backupId + ".json", "utf-8", function(err, backupJson) {
+            if (err) {
+                response.writeHead(500);
+                response.write("Couldn't find backupId " + backupId);
+                response.end();
+            }
+            sys.puts("Reading backup " + backupId);
+            var backupObject = JSON.parse(backupJson);
+            var diff = operalinkutils.diffOperaLinkItems(
+                latestObject,
+                backupObject,
+                {onlyProperties: ['title', 'uri', 'nickname', 'description'],
+                 keepProperties: ['title']});
+            response.writeHead(200);
+            sys.puts(JSON.stringify(diff));
+            response.write(JSON.stringify(diff));
+            response.end();
+        });
+    });
+}
+
 exports.start = start;
 exports.getRequestToken = getRequestToken;
 exports.authorise = authorise;
 exports.backupList = backupList;
+exports.backupDiff = backupDiff;

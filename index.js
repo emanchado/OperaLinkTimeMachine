@@ -8,6 +8,7 @@ handle["^/start"] = requestHandlers.start;
 handle["^/get_request_token"] = requestHandlers.getRequestToken;
 handle["^/authorise"] = requestHandlers.authorise;
 handle["^/backup/list"] = requestHandlers.backupList;
+handle["^/backup/diff"] = requestHandlers.backupDiff;
 handle["^/static/.+"] = "*static*";
 handle["^/favicon.ico"] = "*static*";
 

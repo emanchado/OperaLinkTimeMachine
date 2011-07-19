@@ -2,6 +2,7 @@
 <html xmlns:ng="http://angularjs.org">
   <head>
     <title>Details for Opera Link backup</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></script>
     <link rel="stylesheet" href="/static/css/main.css"></script>
     <script src="/static/valentine.min.js"></script>
     <script src="/static/angular-0.9.17.min.js" ng:autobind></script>
@@ -9,7 +10,7 @@
     OperaLinkDiffController.$inject = ['$resource'];
     function OperaLinkDiffController($resource) {
       this.DiffItems = $resource(
-        '/static/random-diff.json',
+        '/backup/diff',
         {},
         { get:     {method: 'GET'}}
       );
@@ -20,6 +21,11 @@
       );
     }
     OperaLinkDiffController.prototype = {
+      init: function() {
+        var re = new RegExp("backupId=([^&#]+)");
+        var queryString = window.location.search.substring(1);
+        backupId.value = re.exec(queryString)[1];
+      },
       fetchDiffInfo: function() {
         var commonOptions = {backupId: backupId.value};
         this.diffItems = this.DiffItems.get(commonOptions);
@@ -31,9 +37,9 @@
     };
     </script>
   </head>
-  <body ng:controller="OperaLinkDiffController" ng:init="fetchDiffInfo(); showAdded = true; showModified = true; showRemoved = true">
+  <body ng:controller="OperaLinkDiffController" ng:init="init(); fetchDiffInfo(); showAdded = true; showModified = true; showRemoved = true">
     <h1>{{diffInfo.backupDate}} backup details</h1>
-    <input type="hidden" name="backupId" value="2011-04-20" />
+    <input type="hidden" id="backupId" name="backupId" value="" />
 
     <div id="options-panel">
       <div class="option">Switch to this</div>
@@ -47,7 +53,7 @@
     <div class="item-list added-items" ng:if="diffItems.added.$size()">
       <h2>Added items compared to now ({{diffItems.added.$size()}}).</h2> <input type="button" ng:click="showAdded = ! showAdded" value="Toggle details" />
       <div class="diff-item" ng:show="showAdded" ng:repeat="item in diffItems.added">
-        <div class="item-prop" ng:repeat="(prop, value) in item">
+        <div class="item-prop" ng:hide="isIdProp(prop)" ng:repeat="(prop, value) in item">
           <span class="property-name">{{prop | html}}</span>: {{value | html}}
         </div>
       </div>
@@ -56,10 +62,10 @@
     <div class="item-list modified-items" ng:if="diffItems.modified.$size()">
       <h2>Modified items compared to now ({{diffItems.modified.$size()}}).</h2> <input type="button" ng:click="showModified = ! showModified" value="Toggle details" />
       <div class="diff-item" ng:show="showModified" ng:repeat="item in diffItems.modified">
-        <span class="property-name">id</span>: {{item.id | html}}
-        <div class="item-prop" ng:repeat="(prop, value) in item">
-          <span ng:hide="isIdProp(prop)">
-            <span class="property-name">{{prop | html}}</span>:
+        <div class="item-prop" ng:hide="isIdProp(prop)" ng:repeat="(prop, value) in item">
+          <span class="property-name">{{prop | html}}</span>:
+          <span ng:hide="value.oldValue || value.newValue">{{value}}</span>
+          <span ng:show="value.oldValue || value.newValue">
             <span ng:show="value.oldValue">"{{value.oldValue | html}}"</span>
             <span ng:hide="value.oldValue">[non-existent]</span>
             -&gt;
@@ -73,7 +79,7 @@
     <div class="item-list removed-items" ng:if="diffItems.removed.$size()">
       <h2>Removed items compared to now ({{diffItems.removed.$size()}}).</h2> <input type="button" ng:click="showRemoved = ! showRemoved" value="Toggle details" />
       <div class="diff-item" ng:show="showRemoved" ng:repeat="item in diffItems.removed">
-        <div class="item-prop" ng:repeat="(prop, value) in item">
+        <div class="item-prop" ng:hide="isIdProp(prop)" ng:repeat="(prop, value) in item">
           <span class="property-name">{{prop | html}}</span>: {{value | html}}
         </div>
       </div>
