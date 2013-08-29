@@ -1,3 +1,20 @@
+DEPRECATED
+==========
+
+This project is deprecated. It was never more than a proof-of-concept.
+
+
+
+
+
+
+
+
+
+
+
+
+
 Opera Link Time Machine
 =======================
 
